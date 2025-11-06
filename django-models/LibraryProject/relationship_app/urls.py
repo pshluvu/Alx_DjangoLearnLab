@@ -9,6 +9,9 @@ from django.urls import path
 from .views import admin_view, librarian_view, member_view
 from django.urls import path
 from .views import add_book_view, edit_book_view, delete_book_view
+from django.urls import path
+from .views import add_book_view, edit_book_view, delete_book_view
+
 
 
 
@@ -29,6 +32,10 @@ urlpatterns = [
     path('books/add/', add_book_view, name='add_book'),
     path('books/edit/<int:pk>/', edit_book_view, name='edit_book'),
     path('books/delete/<int:pk>/', delete_book_view, name='delete_book'),
+    path('books/add_book/', add_book_view, name='add_book'),
+    path('books/edit_book/<int:pk>/', edit_book_view, name='edit_book'),
+    path('books/delete_book/<int:pk>/', delete_book_view, name='delete_book'),
+
 
 
 
