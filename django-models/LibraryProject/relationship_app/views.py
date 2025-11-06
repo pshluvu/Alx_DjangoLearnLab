@@ -5,3 +5,7 @@ from .models import Book, Library
 
 
 # Create your views here.
+def list_books(request):
+    books = Book.objects.all()  # Fetch all Book objects from the database
+    context = {'books': books}  # Pass data to the template
+    return render(request, 'list_books.html', context)
