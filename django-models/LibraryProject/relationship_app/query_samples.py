@@ -24,11 +24,12 @@ def setup_sample_data():
 
 
 # --- Queries ---
-(Add advanced_features_and_security directory)
+#Add advanced_features_and_security directory
 
 # Query all books by a specific author
 def query_books_by_author(author_name):
     author = Author.objects.get(name=author_name)
+    
     books = Book.objects.filter(author=author)
     return books
 
