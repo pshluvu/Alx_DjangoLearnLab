@@ -8,10 +8,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'your-secret-key-here'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False  # Set to False in production
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['yourdomain.com', 'localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
@@ -30,9 +29,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -59,7 +58,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'LibraryProject.wsgi.application'
 ASGI_APPLICATION = 'LibraryProject.asgi.application'
 
-
 # Database
 DATABASES = {
     'default': {
@@ -67,7 +65,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -100,4 +97,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # -----------------------------
 # Custom User Model
 # -----------------------------
-AUTH_USER_MODEL = 'bookshelf.CustomUser'  # or 'accounts.CustomUser' if your model is in accounts
+AUTH_USER_MODEL = 'bookshelf.CustomUser'  # Update if model is in accounts app
+
+# -----------------------------
+# Security Settings
+# -----------------------------
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = False  # Set True if using HTTPS in production
+
