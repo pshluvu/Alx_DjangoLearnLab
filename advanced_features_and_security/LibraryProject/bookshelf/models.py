@@ -1,15 +1,16 @@
 from django.db import models
-from django.conf import settings  # Import settings to reference the custom user model
+from django.conf import settings  # To reference the custom user model
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
     publication_year = models.IntegerField()
-    # Link each book to a user (custom user model)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='books'  # Optional: allows user.books.all() to get all their books
+    added_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # Reference the CustomUser model
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='books_added'
     )
 
     def __str__(self):
