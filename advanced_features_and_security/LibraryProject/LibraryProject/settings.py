@@ -117,9 +117,13 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
 # Redirect all HTTP requests to HTTPS
-SECURE_SSL_REDIRECT = True  # Set True for production
+SECURE_SSL_REDIRECT = True  # True in production
 
 # HTTP Strict Transport Security (HSTS)
 SECURE_HSTS_SECONDS = 31536000  # 1 year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
+
+# Trust the X-Forwarded-Proto header from the proxy (needed when behind a load balancer or reverse proxy)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
