@@ -29,9 +29,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -102,10 +102,24 @@ AUTH_USER_MODEL = 'bookshelf.CustomUser'  # Update if model is in accounts app
 # -----------------------------
 # Security Settings
 # -----------------------------
+
+# Browser XSS filtering
 SECURE_BROWSER_XSS_FILTER = True
+
+# Prevent clickjacking
 X_FRAME_OPTIONS = 'DENY'
+
+# Prevent MIME type sniffing
 SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Enforce HTTPS cookies
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = False  # Set True if using HTTPS in production
 
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True  # Set True for production
+
+# HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
