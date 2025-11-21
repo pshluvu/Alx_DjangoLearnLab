@@ -2,7 +2,10 @@
 # Permission classes ensure that only logged-in users with valid tokens
 # can create, update, retrieve, or delete Book records.
 
-from rest_framework.generics import ListAPIView
+from rest_framework import generics, viewsets
+from rest_framework.permissions import IsAuthenticated
+from .models import Book
+from .serializers import BookSerializer
 from .models import Book
 from .serializers import BookSerializer
 from .models import Book
@@ -19,9 +22,13 @@ from .serializers import BookSerializer
 
 
 
-class BookList(ListAPIView):
+class BookList(generics.ListAPIView):
+    """
+    List all books.
+    """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+
     
 class BookViewSet(ModelViewSet):
     queryset = Book.objects.all()
@@ -52,6 +59,7 @@ class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]
+
 
 
 
