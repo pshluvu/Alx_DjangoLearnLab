@@ -53,6 +53,20 @@ def profile(request):
         u_form = UserUpdateForm(instance=request.user)
     return render(request, 'blog/profile.html', {'u_form': u_form})
 
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        if u_form.is_valid():
+            u_form.save()
+            return redirect('profile')
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+    return render(request, 'blog/profile.html', {'u_form': u_form})
+
+
+
+
 
 # ============================
 # BLOG POST CRUD VIEWS ✅
@@ -143,6 +157,17 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy('post-detail', kwargs={'pk': self.object.post.pk})
 
 
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        return Post.objects.filter(tags__slug=tag_slug)
+
+
+
 
 # ============================
 # COMMENT CRUD VIEWS ✅
@@ -197,11 +222,15 @@ def posts_by_tag(request, tag_name):
     return render(request, 'blog/post_list.html', {'posts': posts, 'tag': tag})
 
 
-def search_posts(request):
-    query = request.GET.get('q', '')
-    posts = Post.objects.filter(
+def search(request):
+    query = request.GET.get('q')
+    results = Post.objects.filter(
         Q(title__icontains=query) |
         Q(content__icontains=query) |
         Q(tags__name__icontains=query)
-    ).distinct().order_by('-published_date')
-    return render(request, 'blog/post_list.html', {'posts': posts, 'query': query})
+    ).distinct()
+
+    return render(request, 'blog/search_results.html', {
+        'results': results,
+        'query': query
+    })
