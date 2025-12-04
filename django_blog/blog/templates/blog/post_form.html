@@ -1,0 +1,45 @@
+{% extends "blog/base.html" %}
+{% block content %}
+  {% if form.instance.pk %}
+    <h1>Edit Post</h1>
+  {% else %}
+    <h1>New Post</h1>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="form-group">
+      {{ form.title.label_tag }}
+      {{ form.title }}
+      {{ form.title.errors }}
+    </div>
+
+    <div class="form-group">
+      {{ form.content.label_tag }}
+      {{ form.content }}
+      {{ form.content.errors }}
+    </div>
+
+    <div class="form-group">
+      {{ form.tags.label_tag }}
+      {{ form.tags }}
+      {{ form.tags.help_text }}
+      {{ form.tags.errors }}
+    </div>
+
+    <button type="submit">Save</button>
+    <a href="{% url 'post-list' %}">Cancel</a>
+  </form>
+{% endblock %}
+
+
+<!-- inside your post article -->
+{% if post.tags.all %}
+  <p class="tags">
+    Tags:
+    {% for tag in post.tags.all %}
+      <a href="{% url 'posts-by-tag' tag.name %}">#{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+  </p>
+{% endif %}

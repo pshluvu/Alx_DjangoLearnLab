@@ -13,6 +13,39 @@ from rest_framework import filters
 from rest_framework import viewsets
 
 
+
+# --- Book ViewSet (Handles all CRUD operations and filtering) ---
+class BookViewSet(viewsets.ModelViewSet):
+    """
+    A ViewSet for viewing and editing book instances.
+    This replaces separate ListAPIView, CreateAPIView, etc., making all methods available.
+    """
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    
+    # Allow read access to anyone, but require authentication for write/update/delete.
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly] 
+
+    # Filtering/Searching/Ordering Configuration
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'author__name'] # Allows searching books by title or author name
+    ordering_fields = ['publication_year', 'title'] # Allows ordering by year or title
+
+
+# --- Author ViewSet ---
+class AuthorViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    A ViewSet for viewing author instances (Read-Only).
+    We use ReadOnlyModelViewSet because nested serializers often make writes complicated.
+    """
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    permission_classes = [permissions.AllowAny]
+
+
+
+
+
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
