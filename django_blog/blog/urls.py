@@ -6,9 +6,11 @@ from .views import (
     PostCreateView,
     PostUpdateView,
     PostDeleteView,
-    CommentCreateView,
+    PostByTagListView,  # ✅ REQUIRED
     CommentUpdateView,
     CommentDeleteView,
+    add_comment,
+    search,
 )
 
 urlpatterns = [
@@ -27,6 +29,18 @@ urlpatterns = [
     path('post/<int:pk>/comments/new/', CommentCreateView.as_view(), name='comment-create'),
     path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment-update'),
     path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
+
+        # ✅ REQUIRED COMMENT URL
+    path('post/<int:pk>/comments/new/', add_comment, name='comment-add'),
+
+    path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment-update'),
+    path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
+
+    # ✅ REQUIRED TAG FILTER URL
+    path('tags/<slug:tag_slug>/', PostByTagListView.as_view(), name='posts-by-tag'),
+
+    # ✅ SEARCH
+    path('search/', search, name='search'),
 ]
 
 
