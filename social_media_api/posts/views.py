@@ -1,10 +1,7 @@
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from .models import CustomUser, Post, Comment, Like
+from .models import CustomUser, Post, Comment, Like, Notification
 from .serializers import UserSerializer, PostSerializer, CommentSerializer
-from notifications.models import Notification  # Make sure your Notification model is imported
-
 
 # Follow/Unfollow views
 class FollowUserView(generics.GenericAPIView):
@@ -17,10 +14,10 @@ class FollowUserView(generics.GenericAPIView):
             user_to_follow = CustomUser.objects.get(username=username)
         except CustomUser.DoesNotExist:
             return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
-
+        
         if request.user == user_to_follow:
             return Response({"detail": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
-
+        
         request.user.following.add(user_to_follow)
         return Response({"detail": f"You are now following {username}."}, status=status.HTTP_200_OK)
 
@@ -35,10 +32,10 @@ class UnfollowUserView(generics.GenericAPIView):
             user_to_unfollow = CustomUser.objects.get(username=username)
         except CustomUser.DoesNotExist:
             return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
-
+        
         if request.user == user_to_unfollow:
             return Response({"detail": "You cannot unfollow yourself."}, status=status.HTTP_400_BAD_REQUEST)
-
+        
         request.user.following.remove(user_to_unfollow)
         return Response({"detail": f"You have unfollowed {username}."}, status=status.HTTP_200_OK)
 
@@ -79,11 +76,9 @@ class LikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
         like, created = Like.objects.get_or_create(user=request.user, post=post)
-
         if created:
-            # Create a notification for the post author
             if post.author != request.user:
                 Notification.objects.create(
                     recipient=post.author,
@@ -100,11 +95,12 @@ class UnlikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
         try:
             like = Like.objects.get(user=request.user, post=post)
             like.delete()
             return Response({"detail": "Post unliked."}, status=status.HTTP_200_OK)
         except Like.DoesNotExist:
-            return Response({"detail": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "You have not liked this post yet."}, status=status.HTTP_400_BAD_REQUEST)
+
 
