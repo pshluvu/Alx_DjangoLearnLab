@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-secret-key')
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'  # Default False for production
+DEBUG = False 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'your-heroku-app.herokuapp.com').split(',')
 
 # Application definition
