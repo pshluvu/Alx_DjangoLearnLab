@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-secret-key')
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'  # Default False for production
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'your-heroku-app.herokuapp.com').split(',')
 
 # Application definition
@@ -116,7 +116,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
-SECURE_SSL_REDIRECT = True  # Set to False if using local dev
+SECURE_SSL_REDIRECT = not DEBUG  # Only enforce HTTPS in production
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
