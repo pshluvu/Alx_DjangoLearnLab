@@ -4,7 +4,8 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate, get_user_model
-from .serializers import RegisterSerializer, UserSerializer, FollowSerializer
+from .serializers import RegisterSerializer, UserSerializer
+from rest_framework.decorators import api_view
 
 User = get_user_model()
 
@@ -53,7 +54,7 @@ class ProfileView(generics.RetrieveAPIView):
 # Follow / Unfollow Functionality
 # -------------------------------
 
-from rest_framework.decorators import api_view
+
 
 @api_view(['POST'])
 @permissions.IsAuthenticated
